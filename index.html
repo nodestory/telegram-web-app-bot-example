@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport"
-          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta name="format-detection" content="telephone=no" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="MobileOptimized" content="176" />
@@ -11,6 +12,8 @@
     <meta name="robots" content="noindex,nofollow" />
     <title></title>
     <script src="https://telegram.org/js/telegram-web-app.js?1"></script>
+    <script src="https://unpkg.com/@blocto/sdk" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="like_button.js"></script>
     <script>
         function setThemeClass() {
             document.documentElement.className = Telegram.WebApp.colorScheme;
@@ -181,129 +184,132 @@
 
 <body>
 
-<section>
-    <h1 id="greeting"></h1>
+    <div id="like_button_container"></div>
 
-    <div id="buttons">
-        <button onclick="webviewExpand();">Expand Webview</button>
-        <small>(The window goes fullscreen)</small>
-        <button onclick="toggleMainButton(this);">Hide Main Button</button>
-        <small>(It hides/shows main button)</small>
-        <button id="btnTime" onclick="sendTime(10);">Send time</button>
-        <small>(The bot will recieve a message with filled <code>web_app_data</code> field)</small>
-    </div>
+    <section>
+        <h1 id="greeting"></h1>
 
-    <h3>Test links</h3>
-    <ul>
-        <li><a href="?nextpage=1">Regular link #1</a> (opens inside webview)</li>
-        <li><a href="https://telegram.org/" target="_blank">target="_blank" link</a> (opens outside webview)</li>
-        <li><a href="javascript:window.open('https://telegram.org/');">window.open() link</a> (opens outside
-            webview)</li>
-        <li><a href="https://t.me/like">LikeBot t.me link</a> (opens inside Telegram app)</li>
-        <li><a href="tg://resolve?domain=vote">VoteBot tg:// link</a> (does not open)</li>
-    </ul>
+        <div id="buttons">
+            <button onclick="webviewExpand();">Expand Webview</button>
+            <small>(The window goes fullscreen)</small>
+            <button onclick="toggleMainButton(this);">Hide Main Button</button>
+            <small>(It hides/shows main button)</small>
+            <button id="btnTime" onclick="sendTime(10);">Send time</button>
+            <small>(The bot will recieve a message with filled <code>web_app_data</code> field)</small>
+        </div>
 
-    <h3>Test permissions</h3>
-    <ul>
-        <li>
-            <a href="javascript:;" onclick="return requestLocation();">Request Location</a>
-            <span id="locationData"></span>
-        </li>
-        <li>
-            <a href="javascript:;" onclick="return requestVideo();">Request Video</a>
-            <span id="videoData"></span>
-        </li>
-        <li>
-            <a href="javascript:;" onclick="return requestAudio();">Request Audio</a>
-            <span id="audioData"></span>
-        </li>
-    </ul>
+        <h3>Test links</h3>
+        <ul>
+            <li><a href="?nextpage=1">Regular link #1</a> (opens inside webview)</li>
+            <li><a href="https://telegram.org/" target="_blank">target="_blank" link</a> (opens outside webview)</li>
+            <li><a href="javascript:window.open('https://telegram.org/');">window.open() link</a> (opens outside
+                webview)</li>
+            <li><a href="https://t.me/like">LikeBot t.me link</a> (opens inside Telegram app)</li>
+            <li><a href="tg://resolve?domain=vote">VoteBot tg:// link</a> (does not open)</li>
+        </ul>
 
-    <h3>Init Data: </h3>
-    <pre id="initData"></pre>
-    <h3>Init Data (unsafe): </h3>
-    <pre id="initDataUnsafe"></pre>
-</section>
+        <h3>Test permissions</h3>
+        <ul>
+            <li>
+                <a href="javascript:;" onclick="return requestLocation();">Request Location</a>
+                <span id="locationData"></span>
+            </li>
+            <li>
+                <a href="javascript:;" onclick="return requestVideo();">Request Video</a>
+                <span id="videoData"></span>
+            </li>
+            <li>
+                <a href="javascript:;" onclick="return requestAudio();">Request Audio</a>
+                <span id="audioData"></span>
+            </li>
+        </ul>
 
-<script type="application/javascript">
-    Telegram.WebApp.ready();
+        <h3>Init Data: </h3>
+        <pre id="initData"></pre>
+        <h3>Init Data (unsafe): </h3>
+        <pre id="initDataUnsafe"></pre>
+    </section>
 
-    const initData = Telegram.WebApp.initData || '';
-    const initDataUnsafe = Telegram.WebApp.initDataUnsafe || {};
+    <script type="application/javascript">
+        Telegram.WebApp.ready();
 
-    document.querySelector('#greeting').innerHTML = `Hi, ${initDataUnsafe.user.first_name}!`;
-    document.querySelector('#initData').innerHTML = JSON.stringify(initData, null, 2);
-    document.querySelector('#initDataUnsafe').innerHTML = JSON.stringify(initDataUnsafe, null, 2);
-    document.querySelector('#themeData').html(JSON.stringify(Telegram.WebApp.themeParams, null, 2));
+        const initData = Telegram.WebApp.initData || '';
+        const initDataUnsafe = Telegram.WebApp.initDataUnsafe || {};
 
-    Telegram.WebApp.MainButton
-        .setText('CLOSE WEBVIEW')
-        .show()
-        .onClick(function(){ webviewClose(); });
+        document.querySelector('#greeting').innerHTML = `Hi, ${initDataUnsafe.user.first_name}!`;
+        document.querySelector('#initData').innerHTML = JSON.stringify(initData, null, 2);
+        document.querySelector('#initDataUnsafe').innerHTML = JSON.stringify(initDataUnsafe, null, 2);
+        document.querySelector('#themeData').html(JSON.stringify(Telegram.WebApp.themeParams, null, 2));
 
-    Telegram.WebApp.onEvent('themeChanged', function() {
-        document.querySelector('#themeData').innerHTML = JSON.stringify(Telegram.WebApp.themeParams, null, 2);
-    });
+        Telegram.WebApp.MainButton
+            .setText('CLOSE WEBVIEW')
+            .show()
+            .onClick(function () { webviewClose(); });
 
-    function toggleMainButton(el) {
-        const mainButton = Telegram.WebApp.MainButton;
-        if (mainButton.isVisible) {
-            mainButton.hide();
-            el.innerHTML = 'Show Main Button';
-        } else {
-            mainButton.show();
-            el.innerHTML = 'Hide Main Button';
-        }
-    }
+        Telegram.WebApp.onEvent('themeChanged', function () {
+            document.querySelector('#themeData').innerHTML = JSON.stringify(Telegram.WebApp.themeParams, null, 2);
+        });
 
-    function webviewExpand() {
-        Telegram.WebApp.expand();
-    }
-
-    function webviewClose() {
-        Telegram.WebApp.close();
-    }
-
-    function sendTime(spam) {
-        const repeat = spam ? 10 : 1;
-        for (let i = 0; i < repeat; i++) {
-            Telegram.WebApp.sendData(new Date().toString());
-        }
-    }
-
-    function requestLocation() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function (position) {
-                document.querySelector('#locationData').innerHTML = '(' + position.coords.latitude + ', ' + position.coords.longitude + ')';
-            });
-        } else {
-            document.querySelector('#locationData').innerHTML = '(Geolocation is not supported in this browser)';
+        function toggleMainButton(el) {
+            const mainButton = Telegram.WebApp.MainButton;
+            if (mainButton.isVisible) {
+                mainButton.hide();
+                el.innerHTML = 'Show Main Button';
+            } else {
+                mainButton.show();
+                el.innerHTML = 'Hide Main Button';
+            }
         }
 
-        return false;
-    }
-
-    function requestVideo() {
-        if (navigator.mediaDevices) {
-            navigator.mediaDevices.getUserMedia({ audio: false, video: true }).then(function(stream) {
-                document.querySelector('#videoData').innerHTML = '(Access granted)';
-            });
-        } else {
-            document.querySelector('#videoData').innerHTML = '(Media devices is not supported in this browser)';
+        function webviewExpand() {
+            Telegram.WebApp.expand();
         }
-        return false;
-    }
 
-    function requestAudio() {
-        if (navigator.mediaDevices) {
-            navigator.mediaDevices.getUserMedia({ audio: true, video: false }).then(function(stream) {
-                document.querySelector('#audioData').innerHTML = '(Access granted)';
-            });
-        } else {
-            document.querySelector('#audioData').innerHTML = '(Media devices is not supported in this browser)';
+        function webviewClose() {
+            Telegram.WebApp.close();
         }
-        return false;
-    }
-</script>
+
+        function sendTime(spam) {
+            const repeat = spam ? 10 : 1;
+            for (let i = 0; i < repeat; i++) {
+                Telegram.WebApp.sendData(new Date().toString());
+            }
+        }
+
+        function requestLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    document.querySelector('#locationData').innerHTML = '(' + position.coords.latitude + ', ' + position.coords.longitude + ')';
+                });
+            } else {
+                document.querySelector('#locationData').innerHTML = '(Geolocation is not supported in this browser)';
+            }
+
+            return false;
+        }
+
+        function requestVideo() {
+            if (navigator.mediaDevices) {
+                navigator.mediaDevices.getUserMedia({ audio: false, video: true }).then(function (stream) {
+                    document.querySelector('#videoData').innerHTML = '(Access granted)';
+                });
+            } else {
+                document.querySelector('#videoData').innerHTML = '(Media devices is not supported in this browser)';
+            }
+            return false;
+        }
+
+        function requestAudio() {
+            if (navigator.mediaDevices) {
+                navigator.mediaDevices.getUserMedia({ audio: true, video: false }).then(function (stream) {
+                    document.querySelector('#audioData').innerHTML = '(Access granted)';
+                });
+            } else {
+                document.querySelector('#audioData').innerHTML = '(Media devices is not supported in this browser)';
+            }
+            return false;
+        }
+    </script>
 </body>
+
 </html>

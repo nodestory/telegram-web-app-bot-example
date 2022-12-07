@@ -1,0 +1,25 @@
+{
+  "name": "telegram-web-app-bot-example",
+  "version": "1.0.0",
+  "description": "Example HTML-file that contains a basic interaction with Telegram Web Apps API. Based on [Attach Bot](https://t.me/asmico_attach_bot).",
+  "main": "app.js",
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nodestory/telegram-web-app-bot-example.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nodestory/telegram-web-app-bot-example/issues"
+  },
+  "homepage": "https://github.com/nodestory/telegram-web-app-bot-example#readme",
+  "dependencies": {
+    "react-scripts": "^5.0.1"
+  }
+}
